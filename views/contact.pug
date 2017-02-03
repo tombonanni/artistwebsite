@@ -1,0 +1,23 @@
+extends layout
+
+block content
+
+  form.form-horizontal(method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+    center
+    h1 Contact Us
+    .container
+      .row
+        .col-sm-6
+          input#name(type='text', placeholder='FIRST & LAST NAME')
+          br
+          input#email(type='text', placeholder='EMAIL')
+          br
+          input#phone(type='text', placeholder='PHONE NUMBER')
+          br
+          input#website(type='text', placeholder='WEBSITE NAME (OPTIONAL)')
+        .col-sm-6
+          textarea#message(placeholder='TYPE A CUSTOM MESSAGE HERE' rows="5")
+      .row
+          button.btn.btn-secondary.pull-right(type='button') Submit

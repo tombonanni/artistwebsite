@@ -1,0 +1,29 @@
+.navbar.navbar-default.navbar-fixed-top
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/')
+        | Logo / Artist Name
+    center
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li(class=(title == 'Gallery') ? 'active' : undefined)
+          a(href='/gallery') Gallery
+        li(class=(title == 'Shop') ? 'active' : undefined)
+          a(href='/shop') Shop
+        li(class=(title == 'Contact') ? 'active' : undefined)
+          a(href='/contact') Contact
+      ul.nav.navbar-nav.navbar-right
+        a.span.fa-stack.fa-lg
+          i.fa.fa-circle.fa-stack-2x
+          i.fa.fa-twitter.fa-stack-1x.fa-inverse
+        a.span.fa-stack.fa-lg
+          i.fa.fa-circle.fa-stack-2x
+          i.fa.fa-facebook.fa-stack-1x.fa-inverse
+        a.span.fa-stack.fa-lg
+          i.fa.fa-circle.fa-stack-2x
+          i.fa.fa-instagram.fa-stack-1x.fa-inverse
