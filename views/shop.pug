@@ -1,1 +1,16 @@
 extends layout
+
+block content
+  body.black
+
+  .row
+    .col-sm-16
+      center
+        each product in products
+          - url= product.url.substr(product.url.lastIndexOf('/'), product.url.length-1)
+          a(href='/product' + url)
+            .description
+              img(src='/shop' + url)
+              p.shoptext.
+                #{product.name}#[br]
+                $#{product.price}

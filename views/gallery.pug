@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  body.gallery
+  body.black
   #blueimp-gallery.blueimp-gallery.blueimp-gallery-controls
     .slides
     h3.title
@@ -16,40 +16,11 @@ block content
       .col-sm-16
         #links
           center
-            a(href='/css/images/test.jpg')
-              img(src='/css/images/test.jpg')
-            a(href='/css/images/test2.jpg')
-              img(src='/css/images/test2.jpg')
-            a(href='/css/images/test3.jpg')
-              img(src='/css/images/test3.jpg')
-            a(href='/css/images/test4.jpg')
-              img(src='/css/images/test4.jpg')
-            a(href='/css/images/test5.jpg')
-              img(src='/css/images/test5.jpg')
-            a(href='/css/images/test6.jpg')
-              img(src='/css/images/test6.jpg')
-            a(href='/css/images/test7.jpg')
-              img(src='/css/images/test7.jpg')
-            a(href='/css/images/test8.jpg')
-              img(src='/css/images/test8.jpg')
-            a(href='/css/images/test9.jpg')
-              img(src='/css/images/test9.jpg')
-            a(href='/css/images/test10.jpg')
-              img(src='/css/images/test10.jpg')
-            a(href='/css/images/test11.png')
-              img(src='/css/images/test11.png')
-            a(href='/css/images/test12.jpg')
-              img(src='/css/images/test12.jpg')
-            a(href='/css/images/test13.jpg')
-              img(src='/css/images/test13.jpg')
-            a(href='/css/images/test14.jpg')
-              img(src='/css/images/test14.jpg')
-            a(href='/css/images/test15.jpg')
-              img(src='/css/images/test15.jpg')
-            a(href='/css/images/test16.jpg')
-              img(src='/css/images/test16.jpg')
+            each image in images
+              a(href='/gallery/' + image)
+                img(src='/gallery/' + image)
 
-    script(src='js/blueimp-gallery.min.js')
+    script(src='/js/blueimp-gallery.min.js')
 
     script.
       document.getElementById('links').onclick = function (event) {

@@ -4,6 +4,7 @@ const async = require('async');
 const request = require('request');
 const cheerio = require('cheerio');
 const graph = require('fbgraph');
+const Product = require('../models/Product');
 //const LastFmNode = require('lastfm').LastFmNode;
 //const tumblr = require('tumblr.js');
 //const GitHub = require('github');
@@ -606,8 +607,28 @@ exports.getFileUpload = (req, res) => {
 };
 
 exports.postFileUpload = (req, res) => {
-  req.flash('success', { msg: 'File was uploaded successfully.' });
-  res.redirect('/api/upload');
+  console.log("XBUG: " + req.body.price);
+  console.log("XBUG: " + req.body.description);
+  console.log("XBUG: " + req.file.filename); //multer assigned filename
+  console.log("XBUG: " + req.file.destination); //gallery or shop
+
+  if (!req.file) {
+    req.flash('errors', { msg: 'No file selected.' });
+  } else {
+    req.flash('success', { msg: 'File was uploaded successfully.' });
+    if (req.file.destination.includes('shop')) {
+      Product.create({
+        name: req.body.name,
+        price: req.body.price,
+        description: req.body.description,
+        url: req.file.destination + '/' + req.file.filename
+      }, function(err, product){
+        if (err) next(err);
+        console.log('ADDED TO SHOP: ' + product)
+      });
+    }
+  }
+  res.redirect('/account');
 };
 
 /**

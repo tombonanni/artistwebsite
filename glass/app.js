@@ -19,25 +19,8 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      var dest = 'public/' + req.body.type;
-      cb(null, dest);
-    }
-});
-const upload = multer(
-  {
-    dest: path.join(__dirname, 'uploads'),
-    storage: storage,
-    fileFilter: function(req, file, cb) {
-      if (!file.originalname.match(/\.(jpg|jpeg|png|gif|jpg-large)$/i)) {
-        req.flash('errors', { msg: 'Only image files are allowed' })
-        return cb('Only image files are allowed');
-      }
-      cb(null, true);
-    }
-  }
-);
+
+const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -48,12 +31,11 @@ dotenv.load({ path: '.env.example' });
  * Controllers (route handlers).
  */
 const homeController = require('./controllers/home');
-const userController = require('./controllers/user');
+//const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 const galleryController = require('./controllers/gallery');
 const shopController = require('./controllers/shop');
-const productController = require('./controllers/product');
 
 /**
  * API keys and Passport configuration.
@@ -104,9 +86,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/account/' || req.path === '/account' ||
-      req.path === '/account/profile' || req.path === '/account/password' ||
-      req.path === '/deleteimage') {
+  if (req.path === '/api/upload') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -116,7 +96,6 @@ app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
   res.locals.user = req.user;
-  req.session.returnTo = '/account';
   next();
 });
 app.use((req, res, next) => {
@@ -139,24 +118,22 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
  * Primary app routes.
  */
 app.get('/', homeController.index);
-app.get('/login', userController.getLogin);
-app.post('/login', userController.postLogin);
-app.get('/logout', userController.logout);
+//app.get('/login', userController.getLogin);
+//app.post('/login', userController.postLogin);
+//app.get('/logout', userController.logout);
 //app.get('/forgot', userController.getForgot);
 //app.post('/forgot', userController.postForgot);
 //app.get('/reset/:token', userController.getReset);
 //app.post('/reset/:token', userController.postReset);
-app.get('/signup', userController.getSignup);
-app.post('/signup', userController.postSignup);
+//app.get('/signup', userController.getSignup);
+//app.post('/signup', userController.postSignup);
 app.get('/contact', contactController.getContact);
 app.post('/contact', contactController.postContact);
 app.get('/gallery', galleryController.getGallery);
 app.get('/shop', shopController.getShop);
-app.get('/product/:productId', productController.getProduct);
-app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
-app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
-app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
-app.post('/deleteimage', passportConfig.isAuthenticated, userController.deleteImage);
+//app.get('/account', passportConfig.isAuthenticated, userController.getAccount);
+//app.post('/account/profile', passportConfig.isAuthenticated, userController.postUpdateProfile);
+//app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 //app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 //app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
@@ -188,8 +165,8 @@ app.get('/api/paypal', apiController.getPayPal);
 app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
 //app.get('/api/lob', apiController.getLob);
-//app.get('/account/upload', apiController.getFileUpload);
-app.post('/account', upload.single('myFile'), apiController.postFileUpload);
+app.get('/api/upload', apiController.getFileUpload);
+app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
 //app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getPinterest);
 //app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
 //app.get('/api/google-maps', apiController.getGoogleMaps);

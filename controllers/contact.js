@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const User = require('../models/User');
 
 const transporter = nodemailer.createTransport({
   service: 'SendGrid',
@@ -13,8 +14,15 @@ const transporter = nodemailer.createTransport({
  * Contact form page.
  */
 exports.getContact = (req, res) => {
-  res.render('contact', {
-    title: 'Contact'
+  User.findOne({ email: "joe@admin.com" }, function(err, user){
+    if (err) console.log(err);
+    console.log(user);
+    res.render('contact', {
+      title: 'Contact',
+      twitter: user.twitter,
+      facebook: user.facebook,
+      instagram: user.instagram
+    });
   });
 };
 

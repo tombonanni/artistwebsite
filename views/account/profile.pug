@@ -1,52 +1,105 @@
 extends ../layout
 
 block content
-  .page-header
-    h3 Profile Information
+  body.black
+    .row
+      center
+        .col-sm-6.pull-left
+          h4 Gallery Upload
+          form.form-horizontal(role='form', enctype='multipart/form-data', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='type', value='gallery')
+            .form-group
+              br
+              input(type='file', name='myFile')
+              br
+            .form-group
+              label.col-sm-3.control-label(for='name') Title
+              .col-sm-7
+                input.form-control(type='text', name='name')
+            .form-group
+              label.col-sm-3.control-label(for='description') Description
+              .col-sm-7
+                textarea#product.form-control(type='text', name='description' style='height:165px')
+              br
+            button#submit.btn.btn-secondary(type='submit')
+              i.fa.fa-upload
+              | Upload
+            br
+            br
+          each image, index in galleryImages
+            form(id='deletegallery' + index, method='POST', action='/deleteimage')
+              input(type='hidden', name='_csrf', value=_csrf)
+              input(type='hidden', name='image', value=image)
+              input(type='hidden', name='folder', value='gallery')
+              a(onclick='document.getElementById("deletegallery' + index + '").submit();')
+                .col-sm-16.options.mini
+                  img.mini.fade(src='/gallery/' + image)
+                  p.imagetext X
 
+      center
+        .col-sm-6
+          h4 Shop Upload
+          form.form-horizontal(role='form', enctype='multipart/form-data', method='POST')
+            input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='type', value='shop')
+            .form-group
+              br
+              input(type='file', name='myFile')
+              br
+            .form-group
+              label.col-sm-3.control-label(for='name') Title
+              .col-sm-7
+                input.form-control(type='text', name='name')
+            .form-group
+              label.col-sm-3.control-label(for='price') Price
+              .col-sm-7
+                input.form-control(type='number', placeholder='0.00', name='price')
+            .form-group
+              label.col-sm-3.control-label(for='description') Description
+              .col-sm-7
+                textarea#product.form-control(type='text', name='description')
+              br
+            button#submit.btn.btn-secondary(type='submit')
+              i.fa.fa-upload
+              | Upload
+            br
+            br
+          each image, index in shopImages
+            form(id='deleteshop' + index, method='POST', action='/deleteimage')
+              input(type='hidden', name='_csrf', value=_csrf)
+              input(type='hidden', name='image', value=image)
+              input(type='hidden', name='folder', value='shop')
+              a(onclick='document.getElementById("deleteshop' + index + '").submit();')
+                .col-sm-16.options.mini
+                  img.mini.fade(src='/shop/' + image)
+                  p.imagetext X
+    hr
+
+  h4 Social Media Info
   form.form-horizontal(action='/account/profile', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group
-      label.col-sm-3.control-label(for='email') Email
+      label.col-sm-3.control-label(for='twitter') Twitter URL
       .col-sm-7
-        input.form-control(type='email', name='email', id='email', value=user.email)
+        input.form-control(type='text', name='twitter', id='twitter', value=twitter)
     .form-group
-      label.col-sm-3.control-label(for='name') Name
+      label.col-sm-3.control-label(for='facebook') Facebook URL
       .col-sm-7
-        input.form-control(type='text', name='name', id='name', value=user.profile.name)
+        input.form-control(type='text', name='facebook', id='facebook', value=facebook)
     .form-group
-      label.col-sm-3.control-label Gender
-      .col-sm-6
-        label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='male', name='gender', value='male', data-toggle='radio')
-          span Male
-        label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='female', name='gender', value='female', data-toggle='radio')
-          span Female
-        label.radio.col-sm-3
-          input(type='radio', checked=user.profile.gender=='other', name='gender', value='other', data-toggle='radio')
-          span Other
-    .form-group
-      label.col-sm-3.control-label(for='location') Location
+      label.col-sm-3.control-label(for='instagram') Instagram URL
       .col-sm-7
-        input.form-control(type='text', name='location', id='location', value=user.profile.location)
-    .form-group
-      label.col-sm-3.control-label(for='website') Website
-      .col-sm-7
-        input.form-control(type='text', name='website', id='website', value=user.profile.website)
-    .form-group
-      label.col-sm-3.control-label Gravatar
-      .col-sm-4
-        img(src=user.gravatar(), class='profile', width='100', height='100')
+        input.form-control(type='text', name='instagram', id='instagram', value=instagram)
     .form-group
       .col-sm-offset-3.col-sm-4
-        button.btn.btn.btn-primary(type='submit')
+        button#submit.btn.btn-secondary(type='submit')
           i.fa.fa-pencil
-          | Update Profile
+          | Update
 
-  .page-header
-    h3 Change Password
+    hr
 
+  h4 Change Password
   form.form-horizontal(action='/account/password', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group
@@ -59,53 +112,6 @@ block content
         input.form-control(type='password', name='confirmPassword', id='confirmPassword')
     .form-group
       .col-sm-offset-3.col-sm-4
-        button.btn.btn-primary(type='submit')
+        button#submit.btn.btn-secondary(type='submit')
           i.fa.fa-lock
           | Change Password
-
-  .page-header
-    h3 Delete Account
-
-  form.form-horizontal(action='/account/delete', method='POST')
-    .form-group
-      p.col-sm-offset-3.col-sm-4 You can delete your account, but keep in mind this action is irreversible.
-      input(type='hidden', name='_csrf', value=_csrf)
-      .col-sm-offset-3.col-sm-4
-        button.btn.btn-danger(type='submit')
-          i.fa.fa-trash
-          | Delete my account
-
-  .page-header
-    h3 Linked Accounts
-  .form-horizontal
-    .form-group
-      .col-sm-offset-3.col-sm-4
-        if user.instagram
-          p: a.text-danger(href='/account/unlink/instagram') Unlink your Instagram account
-        else
-          p: a(href='/auth/instagram') Link your Instagram account
-      .col-sm-offset-3.col-sm-4
-        if user.google
-          p: a.text-danger(href='/account/unlink/google') Unlink your Google account
-        else
-          p: a(href='/auth/google') Link your Google account
-      .col-sm-offset-3.col-sm-4
-        if user.facebook
-          p: a.text-danger(href='/account/unlink/facebook') Unlink your Facebook account
-        else
-          p: a(href='/auth/facebook') Link your Facebook account
-      .col-sm-offset-3.col-sm-4
-        if user.twitter
-          p: a.text-danger(href='/account/unlink/twitter') Unlink your Twitter account
-        else
-          p: a(href='/auth/twitter') Link your Twitter account
-      .col-sm-offset-3.col-sm-4
-        if user.github
-          p: a.text-danger(href='/account/unlink/github') Unlink your GitHub account
-        else
-          p: a(href='/auth/github') Link your GitHub account
-      .col-sm-offset-3.col-sm-4
-        if user.linkedin
-          p: a.text-danger(href='/account/unlink/linkedin') Unlink your LinkedIn account
-        else
-          p: a(href='/auth/linkedin') Link your LinkedIn account

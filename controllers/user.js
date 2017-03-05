@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
+const Product = require('../models/Product');
+const fs = require('fs');
 
 /**
  * GET /login
@@ -91,6 +93,9 @@ exports.postSignup = (req, res, next) => {
     password: req.body.password
   });
 
+  //TODO remove console.log
+  console.log('DEBUG: ' + user);
+
   User.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     if (existingUser) {
@@ -110,12 +115,61 @@ exports.postSignup = (req, res, next) => {
 };
 
 /**
+ * POST /deleteimage
+ * Delete image.
+ */
+
+exports.deleteImage = (req, res) => {
+  var file = '';
+  if (req.body.folder === 'shop') {
+    file = 'public/shop/' + req.body.image;
+  } else if (req.body.folder === 'gallery') {
+    file = 'public/gallery/' + req.body.image;
+  } else {
+    res.redirect('/');
+  }
+  Product.findOneAndRemove({url: file}, function(err){
+    fs.unlink(file, (err) => {
+      if (err) {
+        console.log(err);
+        req.flash('errors', { msg: 'Failed to delete file' });
+        res.redirect('/account');
+      }
+      req.flash('success', { msg: 'File has been deleted' });
+      res.redirect('/account');
+    });
+  });
+}
+
+/**
  * GET /account
  * Profile page.
  */
 exports.getAccount = (req, res) => {
-  res.render('account/profile', {
-    title: 'Account Management'
+  var shopImages = [];
+  var galleryImages = [];
+  var shopFolder = 'public/shop';
+  var galleryFolder = 'public/gallery';
+
+  fs.readdir(shopFolder, (err, files) => {
+    if (err) next(err);
+    files.forEach(file => {
+      shopImages.push(file);
+    });
+    fs.readdir(galleryFolder, (err, files) => {
+      if (err) next(err);
+      files.forEach(file => {
+        galleryImages.push(file);
+      });
+      res.render('account/profile', {
+        title: 'Administrator',
+        shopImages: shopImages,
+        galleryImages: galleryImages,
+        twitter: req.user.twitter,
+        facebook: req.user.facebook,
+        instagram: req.user.instagram
+      });
+    });
   });
 };
 
@@ -124,34 +178,23 @@ exports.getAccount = (req, res) => {
  * Update profile information.
  */
 exports.postUpdateProfile = (req, res, next) => {
-  req.assert('email', 'Please enter a valid email address.').isEmail();
-  req.sanitize('email').normalizeEmail({ remove_dots: false });
+  //req.assert('email', 'Please enter a valid email address.').isEmail();
+  //req.sanitize('email').normalizeEmail({ remove_dots: false });
 
-  const errors = req.validationErrors();
+  //const errors = req.validationErrors();
 
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/account');
-  }
-
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user.email = req.body.email || '';
-    user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
-    user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-          return res.redirect('/account');
-        }
-        return next(err);
-      }
+  //if (errors) {
+  //  req.flash('errors', errors);
+  //  return res.redirect('/account');
+  //}
+  User.findByIdAndUpdate(req.user.id, {
+    twitter: req.body.twitter,
+    facebook: req.body.facebook,
+    instagram: req.body.instagram
+  },(err, user) => {
+    if (err) { return next(err); } else { console.log(user); }
       req.flash('success', { msg: 'Profile information has been updated.' });
       res.redirect('/account');
-    });
   });
 };
 
