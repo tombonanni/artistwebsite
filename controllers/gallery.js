@@ -11,6 +11,12 @@ exports.getGallery = (req, res) => {
   });
   User.findOne({ email: "joe@admin.com" }, function(err, user){
     if (err) console.log(err);
+    if (!user) {
+      res.render('gallery', {
+        title: 'Gallery',
+        images: images
+      });
+    }
     res.render('gallery', {
       title: 'Gallery',
       images: images,
