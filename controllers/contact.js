@@ -16,13 +16,18 @@ const transporter = nodemailer.createTransport({
 exports.getContact = (req, res) => {
   User.findOne({ email: "joe@admin.com" }, function(err, user){
     if (err) console.log(err);
-    console.log(user);
-    res.render('contact', {
-      title: 'Contact',
-      twitter: user.twitter,
-      facebook: user.facebook,
-      instagram: user.instagram
-    });
+    if (user === null) {
+      res.render('contact', {
+        title: 'Contact'
+      });
+    } else {
+      res.render('contact', {
+        title: 'Contact',
+        twitter: user.twitter,
+        facebook: user.facebook,
+        instagram: user.instagram
+      });
+    }
   });
 };
 
