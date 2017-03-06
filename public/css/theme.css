@@ -250,6 +250,20 @@ p.imagetext {
   color: black;
 }
 
+.blueimp-gallery>.indicator>li {
+  border: none !important;
+  opacity: 1 !important;
+  background-size: cover !important;
+  width: 3vmax !important;
+  height: 3vmax !important;
+}
+
+@media (max-width: 600px) {
+  #blueimp-gallery-carousel {
+    height: 100vw !important;
+  }
+}
+
 #message {
   height: inherit;
   width: 100%;

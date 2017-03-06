@@ -1,1 +1,31 @@
 extends layout
+
+block content
+  body.black
+  #blueimp-gallery-carousel.blueimp-gallery.blueimp-gallery-carousel
+    .slides
+    h3.title
+    a.prev ‹
+    a.next ›
+    a.play-pause
+    ol.indicator
+
+  .container
+    .row
+      .col-sm-16
+        #links
+          center
+            each image in images
+              a(style='display:none' href='/gallery/' + image)
+                img.mini(src='/gallery/' + image)
+
+  script(src='/js/blueimp-gallery.min.js')
+
+  script.
+    blueimp.Gallery(
+    document.getElementById('links').getElementsByTagName('a'),
+    {
+    container: '#blueimp-gallery-carousel',
+    carousel: true
+    }
+    );
