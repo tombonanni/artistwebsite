@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
  * Contact form page.
  */
 exports.getContact = (req, res) => {
-  User.findOne({ email: "joe@admin.com" }, function(err, user){
+  User.findOne({ email: "joecugini@gmail.com" }, function(err, user){
     if (err) console.log(err);
     if (user === null) {
       res.render('contact', {

@@ -9,7 +9,7 @@ exports.index = (req, res) => {
       images.push(file)
     });
   });
-  User.findOne({ email: "joe@admin.com" }, function(err, user){
+  User.findOne({ email: "joecugini@gmail.com" }, function(err, user){
     if (err) console.log(err);
     if (user === null) {
       res.render('home', {

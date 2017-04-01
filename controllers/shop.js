@@ -5,7 +5,7 @@ const async = require('async');
 
 exports.getShop = (req, res) => {
   const uploadFolder = 'public/shop';
-  User.findOne({ email: "joe@admin.com" }, function(err, user){
+  User.findOne({ email: "joecugini@gmail.com" }, function(err, user){
     if (err) console.log(err);
     if (user === null){
       Product.find({}, function(err, products){
